@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const uri = 'mongodb+srv://netosilv4:99550123aa@symply-wallet-database.whpgx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const uri = process.env.HOST_URI
 
 const client = new MongoClient(uri);
 
