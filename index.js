@@ -12,6 +12,6 @@ app.get('/', (req, res) => {
 
 app.use(route)
 
-const PORT = process.env.PORT
+const PORT = 3010
 
 app.listen(PORT, () => console.log(`Ouvindo porta ${PORT}`))
