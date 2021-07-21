@@ -9,6 +9,9 @@ const validate = (user, password) => {
 }
 
 const authUser = async (info) => {
+
+  console.log('cheguei no auth')
+
   const { user, password } = info
 
   const isValid = validate(user, password)
