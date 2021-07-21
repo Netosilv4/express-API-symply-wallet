@@ -6,7 +6,6 @@ const client = new pg.Client({
   database: process.env.DATABASE_KEY,
   password: process.env.PASSWORD_KEY,
   port: process.env.PORT,
-  ssl: { rejectUnauthorized: false }
 })
 
 client.connect();

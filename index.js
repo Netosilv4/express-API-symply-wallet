@@ -7,7 +7,10 @@ const app = express()
 app.use(express.json())
 
 app.get('/', (req, res) => {
-  res.send(`${process.env.USER_KEY}`)
+  res.send(`${process.env.USER_KEY} 
+  ${process.env.HOST_KEY} 
+  ${process.env.DATABASE_KEY} 
+  ${process.env.PASSWORD_KEY}`)
 })
 
 app.use(route)
