@@ -7,14 +7,11 @@ const app = express()
 app.use(express.json())
 
 app.get('/', (req, res) => {
-  res.send(`${process.env.USER_KEY} 
-  ${process.env.HOST_KEY} 
-  ${process.env.DATABASE_KEY} 
-  ${process.env.PASSWORD_KEY}`)
+  res.send({ message: "Tudo 10" })
 })
 
 app.use(route)
 
-const PORT = process.env.PORT || 3010
+const PORT = process.env.PORT
 
 app.listen(PORT, () => console.log(`Ouvindo porta ${PORT}`))
