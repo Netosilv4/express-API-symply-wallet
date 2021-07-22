@@ -1,4 +1,4 @@
-const { getUser, register, logIn } = require('../models/userModels')
+const { getUser, register, logIn, postPayment, getPayment  } = require('../models/userModels')
 
 const validate = (user, password) => {
   if (!user) return { code: 422, message: 'Usuario não informado' }
@@ -60,10 +60,26 @@ const authRegister = async ({ password, email, firstName, lastName, user }) => {
 
   const back = await register({ ...userData })
 
-  return { code: 200, message: 'Usuario Cadastrado', id: `${back.insertedId}`}
+  return { code: 200, message: 'Usuario Cadastrado', id: `${back.insertedId}` }
+}
+
+const paymentAuth = async (info) => {
+  const auth = await getUser(info.user, info.password)
+  if (!auth) return { code: 422, message: "Não foi possivel cadastrar pagamento, verifique suas credenciais e se está logado" }
+  const back = await postPayment(info)
+  return { code: 200, message: "Pagamento Cadastrado", id: `${back.insertedId}` }
+}
+
+const paymentRequest = async (info) => {
+  const auth = await getUser(info.user, info.password)
+  if (!auth) return { code: 422, message: "Não foi possivel recuperar pagamentos" }
+  const back = await getPayment(info.user)
+  return { code: 200, payments: { ...back } }
 }
 
 module.exports = {
   userLogin,
   authRegister,
+  paymentAuth,
+  paymentRequest,
 }
