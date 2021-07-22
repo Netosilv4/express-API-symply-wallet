@@ -29,7 +29,7 @@ const postPayment = async (info) => {
 }
 
 const getPayment = async (info) => {
-  const back = await client.db(`${process.env.HOST_ONE}`).collection(`${process.env.HOST_TREE}`).find({ "user_login": info })
+  const back = await client.db(`${process.env.HOST_ONE}`).collection(`${process.env.HOST_TREE}`).find({ "user": info })
   return back
 }
 
