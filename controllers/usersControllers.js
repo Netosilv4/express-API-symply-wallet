@@ -16,7 +16,7 @@ const newPayment = async (req, res) => {
 }
 
 const searchPayments = async (req, res) => {
-  const payments = await paymentRequest()
+  const payments = await paymentRequest(req.body)
   res.status(200).json(payments)
 }
 module.exports = {
