@@ -1,12 +1,5 @@
-const { getUser, register, logIn, postPayment, getPayment } = require('../models/userModels')
-
-const validate = (user, password) => {
-  if (!user) return { code: 422, message: 'Usuario não informado' }
-  if (!password) return { code: 422, message: 'Senha não informada' }
-  if (user.length < 4) return { code: 422, message: 'Usuario inválido' }
-  if (password.length < 5) return { code: 422, message: 'Senha inválida' }
-  return {}
-}
+const { getUser, register, logIn, postPayment, getPayment, getPaymentId, updatePayment } = require('../models/userModels')
+const { validate, validateRegister } = require('../schema/index')
 
 const userLogin = async (info) => {
 
@@ -21,19 +14,6 @@ const userLogin = async (info) => {
   if (!data) return { code: 422, message: 'Usuario não encontrado !' }
 
   return { code: 200, message: 'Usuario conectado', info: { ...data } }
-}
-
-const validateRegister = (password, email, firstName, lastName, user) => {
-  const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-  if (!password || !email || !firstName || !lastName || !user) return { code: 422, message: 'Preencha todos os campos' }
-  if (password.length < 5) return { code: 422, message: 'Senha inválida' }
-  if (/\s/g.test(password)) return { code: 422, message: 'Senha contém espaços' }
-  if (/\s/g.test(user)) return { code: 422, message: 'Usuario contém com espaços' }
-  if (/\s/g.test(email)) return { code: 422, message: 'Email contém com espaços' }
-  if (user.length < 5) return { code: 422, message: "Usuario inválido" }
-  if (email.length < 5) return { code: 422, message: "Email inválido" }
-  if (!re.test(email)) return { code: 422, message: "Email fora do formato aceitavel" }
-  return { code: 200, message: "Todos os campos são válidos" }
 }
 
 
@@ -79,9 +59,25 @@ const paymentRequest = async (info) => {
   }
 }
 
+const deleteRequest = async (info) => {
+  const auth = await getUser(info.user, info.password)
+  if (!auth) return { code: 422, message: "Não foi possivel acessar pagamentos" }
+  const back = await getPaymentId(info.id)
+  return back.deletedCount !== 0 ? { code: 200, message: "Pagamento deletado" } : { code: 422, message: "Pagamento não encontrado" }
+}
+
+const editRequest = async (info) => {
+  const auth = await getUser(info.user, info.password)
+  if (!auth) return { code: 422, message: "Não foi possivel acessar pagamentos" }
+  await updatePayment(info)
+  return { code: 200, message: "Pagamento editado " }
+}
+
 module.exports = {
   userLogin,
   authRegister,
   paymentAuth,
   paymentRequest,
+  deleteRequest,
+  editRequest
 }

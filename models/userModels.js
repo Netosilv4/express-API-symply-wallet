@@ -1,14 +1,15 @@
+const { ObjectId } = require('mongodb')
 const { client } = require('./connection')
 
 const logIn = async (user, password) => {
-  const data = await client.db(`${process.env.HOST_ONE}`).collection(`${process.env.HOST_TWO}`).findOne(
+  const data = await client.db(process.env.HOST_ONE).collection(process.env.HOST_TWO).findOne(
     { "user_login": user, "user_password": password }, { projection: { "user_login": 1, "first_name": 1, "last_name": 1, "user_password": 1 } }
   )
   return data
 }
 
 const getUser = async (user, email) => {
-  const data = await client.db(`${process.env.HOST_ONE}`).collection(`${process.env.HOST_TWO}`).findOne(
+  const data = await client.db(process.env.HOST_ONE).collection(process.env.HOST_TWO).findOne(
     {
       $or: [{ "user_login": `${user}` },
       { "user_email": `${email}` }]
@@ -19,17 +20,27 @@ const getUser = async (user, email) => {
 }
 
 const register = async (info) => {
-  const back = await client.db(`${process.env.HOST_ONE}`).collection(`${process.env.HOST_TWO}`).insertOne({ ...info })
+  const back = await client.db(process.env.HOST_ONE).collection(process.env.HOST_TWO).insertOne({ ...info })
   return back
 }
 
 const postPayment = async (info) => {
-  const back = await client.db(`${process.env.HOST_ONE}`).collection(`${process.env.HOST_TREE}`).insertOne({ ...info })
+  const back = await client.db(process.env.HOST_ONE).collection(process.env.HOST_TREE).insertOne({ ...info })
   return back
 }
 
 const getPayment = async (info) => {
-  const back = await client.db(`${process.env.HOST_ONE}`).collection(`${process.env.HOST_TREE}`).find({"user": info}).toArray()
+  const back = await client.db(process.env.HOST_ONE).collection(process.env.HOST_TREE).find({ "user": info }).toArray()
+  return back
+}
+
+const getPaymentId = async (info) => {
+  const back = await client.db(process.env.HOST_ONE).collection(process.env.HOST_TREE).deleteOne({ "_id": ObjectId(info) })
+  return back
+}
+
+const updatePayment = async (info) => {
+  const back = await client.db(process.env.HOST_ONE).collection(process.env.HOST_TREE).updateOne({ "_id": ObjectId(info.id) }, { $set: { ...info } })
   return back
 }
 
@@ -38,5 +49,7 @@ module.exports = {
   register,
   logIn,
   postPayment,
-  getPayment
+  getPayment,
+  getPaymentId,
+  updatePayment
 }
