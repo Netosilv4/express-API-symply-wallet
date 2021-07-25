@@ -8,7 +8,7 @@ const userLogin = async (info) => {
 
   const { login, password } = info
 
-  const isValid = validate(login.toLowerCase(), password.toLowerCase())
+  const isValid = validate(login, password)
 
   if (isValid.message) return isValid
 
@@ -29,10 +29,10 @@ const userLogin = async (info) => {
 const authRegister = async ({ password, email, firstName, lastName, login }) => {
 
   const isValid = validateRegister(password,
-    email.toLowerCase(),
-    firstName.toLowerCase(),
-    lastName.toLowerCase(),
-    login.toLowerCase())
+    email,
+    firstName,
+    lastName,
+    login)
 
   if (isValid.code === 422) return { ...isValid }
 
