@@ -1,20 +1,20 @@
 const { ObjectId } = require('mongodb')
 const { client } = require('./connection')
 
-const logIn = async (user, password) => {
+const logIn = async (login) => {
   const data = await client.db(process.env.HOST_ONE).collection(process.env.HOST_TWO).findOne(
-    { "user_login": user, "user_password": password }, { projection: { "user_login": 1, "first_name": 1, "last_name": 1, "user_password": 1 } }
+    { "login": login }, { projection: { "login": 1, "firstName": 1, "lastName": 1 } }
   )
   return data
 }
 
-const getUser = async (user, email) => {
+const getUser = async (login, id) => {
   const data = await client.db(process.env.HOST_ONE).collection(process.env.HOST_TWO).findOne(
     {
-      $or: [{ "user_login": `${user}` },
-      { "user_email": `${email}` }]
-    },
-    { projection: { "user_login": 1 } }
+      $or: [{ "login": `${login}` }, { "_id": ObjectId(id) }]
+    }
+        ,
+    { projection: { "login": 1, "password": 1 } }
   );
   return data
 }
