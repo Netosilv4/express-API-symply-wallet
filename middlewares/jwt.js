@@ -27,7 +27,7 @@ const tokenCheck = async (req, res, next) => {
       .status(401)
       .json({ message: 'Erro ao procurar usuário do token.' });
   }
-  if (req.body.login !== decoded.data.user) return (res.status(401).json({ message: "Usuario não bate com o token" }))
+  if (req.body.login !== decoded.data.login) return (res.status(401).json({ message: "Usuario não bate com o token" }))
   next()
 }
 
